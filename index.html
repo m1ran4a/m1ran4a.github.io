@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hugo Miranda — SIEM Engineer & Detection Engineering</title>
+<meta name="description" content="SIEM Engineer and Detection Engineering consultant. NIS2/DORA compliance, SIEM architecture for SMBs, and detection-as-code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07090F;
+    --bg2: #0D1117;
+    --bg3: #131820;
+    --accent: #2F80ED;
+    --accent2: #00C9A7;
+    --text: #E8EDF5;
+    --muted: #6B7A99;
+    --border: rgba(255,255,255,0.07);
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--display);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Grid texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(47,128,237,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(47,128,237,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: rgba(7,9,15,0.85);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--muted); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 2rem 5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    z-index: 1;
+  }
+
+  .hero-content { max-width: 700px; }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--accent);
+    position: relative;
+  }
+
+  .hero-sub {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.9;
+    max-width: 560px;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-sub strong {
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.85rem 1.75rem;
+    border-radius: 3px;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+  }
+
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--muted);
+    color: var(--text);
+  }
+
+  /* STATS BAR */
+  .stats {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .stats-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+  }
+
+  .stat { text-align: center; }
+
+  .stat-number {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  /* SECTION COMMON */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 2rem;
+  }
+
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::before {
+    content: '//';
+    color: var(--muted);
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .section-desc {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    color: var(--muted);
+    max-width: 500px;
+    line-height: 1.8;
+    margin-bottom: 3.5rem;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .service-card {
+    background: var(--bg2);
+    padding: 2rem;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .service-card:hover { background: var(--bg3); }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-icon {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+
+  .service-card h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .service-card p {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .service-price {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  @media(max-width: 720px) {
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .nav-links { display: none; }
+  }
+
+  .about-text p {
+    font-family: var(--mono);
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.9;
+    margin-bottom: 1.25rem;
+  }
+
+  .about-text p strong { color: var(--text); font-weight: 400; }
+
+  .stack-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .stack-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+    background: var(--bg2);
+    font-family: var(--mono);
+    font-size: 0.82rem;
+  }
+
+  .stack-item-name { color: var(--text); }
+
+  .stack-item-tag {
+    font-size: 0.7rem;
+    color: var(--accent2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* CERTS */
+  .certs-section { background: var(--bg2); }
+
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .cert-card {
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    background: var(--bg);
+    transition: border-color 0.2s;
+  }
+
+  .cert-card:hover { border-color: rgba(47,128,237,0.4); }
+
+  .cert-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .cert-dot.inprogress { background: var(--accent2); animation: pulse 2s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .cert-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .cert-meta {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* CONTACT */
+  .contact-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .contact-inner h2 { margin-bottom: 1rem; }
+
+  .contact-inner p {
+    font-family: var(--mono);
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* TERMINAL BLOCK */
+  .terminal {
+    background: #0D1117;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.25rem 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 2;
+    margin-top: 3rem;
+    text-align: left;
+  }
+
+  .terminal-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1rem;
+  }
+
+  .t-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  .t-dot:nth-child(1) { background: #FF5F56; }
+  .t-dot:nth-child(2) { background: #FFBD2E; }
+  .t-dot:nth-child(3) { background: #27C93F; }
+
+  .t-prompt { color: var(--accent); }
+  .t-cmd { color: var(--text); }
+  .t-out { color: var(--muted); }
+  .t-ok { color: var(--accent2); }
+
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1em;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    animation: blink 1.2s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+
+  /* FADE IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">hugo<span>_</span>miranda<span>.sh</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#certs">Certs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <p class="hero-tag">SIEM Engineer · Blue Team · Detection Engineering</p>
+    <h1>Detection<br>that <em>actually</em><br>works.</h1>
+    <p class="hero-sub">
+      Managing <strong>23,000+ log sources</strong> at enterprise scale.<br>
+      Building detection content that finds real threats,<br>
+      not just <strong>generates noise</strong>.
+    </p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn btn-primary">Start a conversation</a>
+      <a href="https://github.com/m1ran4a" target="_blank" class="btn btn-ghost">View GitHub →</a>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat">
+      <span class="stat-number">23K+</span>
+      <span class="stat-label">Log sources managed</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">4+</span>
+      <span class="stat-label">Years blue team ops</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">5</span>
+      <span class="stat-label">SIEM platforms</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">NIS2</span>
+      <span class="stat-label">DORA · CRA ready</span>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-inner">
+    <div class="fade-in">
+      <p class="section-label">What I do</p>
+      <h2>Services</h2>
+      <p class="section-desc">Remote consulting for SMBs and MSSPs that need real detection engineering, not checkbox security.</p>
+    </div>
+
+    <div class="services-grid fade-in">
+      <div class="service-card">
+        <span class="service-icon">01 // MANAGED SIEM</span>
+        <h3>SIEM for SMBs</h3>
+        <p>Wazuh deployment, configuration, log source onboarding, and ongoing alert triage. Built for organizations that can't afford enterprise SIEM licensing or full-time headcount.</p>
+        <p class="service-price">From €1,500 / month</p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">02 // DETECTION ENGINEERING</span>
+        <h3>Detection Content Development</h3>
+        <p>Custom SIGMA rules mapped to MITRE ATT&CK, tuned for your log sources and environment. Includes false positive analysis, test procedures, and platform conversion (Elastic, Sentinel, QRadar, Wazuh).</p>
+        <p class="service-price">From €3,000 / project</p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">03 // COMPLIANCE</span>
+        <h3>NIS2 & DORA Readiness</h3>
+        <p>Gap assessment against NIS2 and DORA technical requirements. Logging standards definition, SIEM coverage mapping, and incident notification workflow design.</p>
+        <p class="service-price">From €5,000 / engagement</p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">04 // MSSP SUBCONTRACTING</span>
+        <h3>SOC & SIEM Engineering</h3>
+        <p>Available for MSSP subcontracting — SIEM engineering, detection content, log source onboarding, and SOC analyst overflow. IBM QRadar, Elastic, and Sentinel specialist.</p>
+        <p class="service-price">€75–120 / hour</p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">05 // INCIDENT RESPONSE</span>
+        <h3>IR Playbooks & Runbooks</h3>
+        <p>Structured incident response documentation — triage checklists, containment procedures, and post-incident review templates tailored to your environment and regulatory obligations.</p>
+        <p class="service-price">From €2,000 / set</p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">06 // ADVISORY</span>
+        <h3>Security Gap Assessment</h3>
+        <p>End-to-end review of your logging coverage, detection logic quality, and response readiness. Delivered as a prioritised remediation roadmap with effort estimates.</p>
+        <p class="service-price">From €3,000 / assessment</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="fade-in">
+        <p class="section-label">Background</p>
+        <h2>About me</h2>
+        <div class="about-text">
+          <p>SIEM Engineer at a large European financial institution, operating an <strong>enterprise IBM QRadar estate of 23,000+ log sources</strong> — responsible for platform maintenance, log source lifecycle, correlation rule engineering, and 24/7 incident response.</p>
+          <p>Before that, nearly four years at <strong>Jolera Inc.</strong>, a Canadian MSSP, where I moved from SOC Analyst to Network & Security Team Lead — running multi-tenant threat monitoring for clients across multiple industries, working across Elastic, Azure Sentinel, and SentinelOne.</p>
+          <p>My focus is on the <strong>technical depth that makes detection work</strong>: log source fidelity, normalization quality, correlation logic, and tuning that eliminates noise without creating blind spots.</p>
+          <p>All consulting engagements are <strong>fully remote</strong> and serve clients outside the financial services sector.</p>
+        </div>
+      </div>
+
+      <div class="fade-in">
+        <p class="section-label">Stack</p>
+        <div class="stack-list">
+          <div class="stack-item">
+            <span class="stack-item-name">IBM QRadar</span>
+            <span class="stack-item-tag">Enterprise · 23K sources</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-item-name">Elastic Stack</span>
+            <span class="stack-item-tag">SIEM · MSSP</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-item-name">Microsoft Sentinel</span>
+            <span class="stack-item-tag">SIEM · Cloud</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-item-name">Wazuh</span>
+            <span class="stack-item-tag">SMB · Open Source XDR</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-item-name">SentinelOne</span>
+            <span class="stack-item-tag">EDR · MDR</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-item-name">SIGMA</span>
+            <span class="stack-item-tag">Detection as Code</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-item-name">MITRE ATT&CK</span>
+            <span class="stack-item-tag">TTP Mapping</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-item-name">Linux · Git</span>
+            <span class="stack-item-tag">Operations</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTS -->
+<section id="certs" class="certs-section">
+  <div class="section-inner">
+    <div class="fade-in">
+      <p class="section-label">Credentials</p>
+      <h2>Certifications</h2>
+      <p class="section-desc">Verified blue team credentials, grounded in hands-on practice.</p>
+    </div>
+
+    <div class="certs-grid fade-in">
+      <div class="cert-card">
+        <div class="cert-dot"></div>
+        <div>
+          <p class="cert-name">Blue Team Level 1 (BTL1)</p>
+          <p class="cert-meta">Security Blue Team · Jan 2026<br>REF: 717013368</p>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-dot inprogress"></div>
+        <div>
+          <p class="cert-name">Certified Junior Detection Engineer (CJDE)</p>
+          <p class="cert-meta">Security Blue Team · In progress</p>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-dot"></div>
+        <div>
+          <p class="cert-name">QRadar SIEM Advanced Topics</p>
+          <p class="cert-meta">IBM / TD SYNNEX · Feb 2026<br>Code: BQ205G</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner fade-in">
+    <p class="section-label" style="justify-content:center">Get in touch</p>
+    <h2>Let's work together</h2>
+    <p>Whether you're an SMB assessing your NIS2 posture, an MSSP looking for subcontracting support, or an organization that needs to take its detection seriously — reach out.</p>
+
+    <div class="contact-links">
+      <a href="mailto:hugo.amiranda@ne0tw0.pt" class="btn btn-primary">hugo.amiranda@ne0tw0.pt</a>
+      <a href="https://linkedin.com/in/m1ran4a" target="_blank" class="btn btn-ghost">LinkedIn</a>
+      <a href="https://github.com/m1ran4a" target="_blank" class="btn btn-ghost">GitHub</a>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="t-dot"></div>
+        <div class="t-dot"></div>
+        <div class="t-dot"></div>
+      </div>
+      <div><span class="t-prompt">hugo@ne0tw0:~$</span> <span class="t-cmd">./check-availability.sh</span></div>
+      <div><span class="t-out">[INFO] Checking consulting availability...</span></div>
+      <div><span class="t-out">[INFO] Location: Porto, Portugal (Remote)</span></div>
+      <div><span class="t-ok">[OK]   Status: Available for new engagements</span></div>
+      <div><span class="t-ok">[OK]   Sectors: Manufacturing, Tech, Healthcare, Retail</span></div>
+      <div><span class="t-out">[INFO] Response time: &lt; 24h</span></div>
+      <div><span class="t-prompt">hugo@ne0tw0:~$</span> <span class="cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Hugo Miranda · SIEM Engineer & Detection Consultant · Porto, Portugal</p>
+  <p style="margin-top:0.5rem">
+    <a href="https://linkedin.com/in/m1ran4a">LinkedIn</a> ·
+    <a href="https://github.com/m1ran4a">GitHub</a> ·
+    <a href="mailto:hugo.amiranda@ne0tw0.pt">Email</a>
+  </p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 100);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
