@@ -1,0 +1,294 @@
+{{- define "main" }}
+{{- $p := .Params }}
+{{- $sev    := lower ($p.severity | default "medium") }}
+{{- $status := lower ($p.status   | default "experimental") }}
+{{- $tactic := $p.mitre_tactic | default "" }}
+{{- $tech   := $p.mitre_technique | default "" }}
+{{- $techUrl := replace $tech "." "/" }}
+
+<nav class="rule-breadcrumb">
+  <a href="{{ "/detection-lab/" | relURL }}">← Detection Lab</a>
+</nav>
+
+<div class="rule-page">
+
+  {{/* ── Header ──────────────────────────────────────────── */}}
+  <header class="rule-page-header">
+    <div class="rule-badge-row">
+      {{- if $tactic }}<span class="rp-badge rp-tactic">{{ $tactic }}</span>{{- end }}
+      <span class="rp-badge rp-sev-{{ $sev }}">{{ $sev }}</span>
+      <span class="rp-badge rp-status-{{ $status }}">{{ $status }}</span>
+    </div>
+    <h1 class="rule-page-title">{{ .Title }}</h1>
+    {{- if .Description }}
+    <p class="rule-page-desc">{{ .Description }}</p>
+    {{- end }}
+  </header>
+
+  {{/* ── ATT&CK + Metadata ───────────────────────────────── */}}
+  <div class="rule-meta-block">
+    {{- if $tech }}
+    <div class="rm-row">
+      <span class="rm-key">Technique</span>
+      <span class="rm-val">
+        <a href="https://attack.mitre.org/techniques/{{ $techUrl }}/"
+           target="_blank" rel="noopener" class="rm-attack-link">
+          {{ $tech }}{{- with $p.technique_name }} — {{ . }}{{- end }} ↗
+        </a>
+      </span>
+    </div>
+    {{- end }}
+    {{- if $tactic }}
+    <div class="rm-row">
+      <span class="rm-key">Tactic</span>
+      <span class="rm-val">{{ $tactic }}</span>
+    </div>
+    {{- end }}
+    {{- with $p.logsource }}
+    <div class="rm-row">
+      <span class="rm-key">Log Source</span>
+      <span class="rm-val">{{ . }}</span>
+    </div>
+    {{- end }}
+    {{- with $p.author }}
+    <div class="rm-row">
+      <span class="rm-key">Author</span>
+      <span class="rm-val">{{ . }}</span>
+    </div>
+    {{- end }}
+    <div class="rm-row">
+      <span class="rm-key">Published</span>
+      <span class="rm-val">{{ .Date.Format "2 January 2006" }}</span>
+    </div>
+  </div>
+
+  {{/* ── Sigma Rule ──────────────────────────────────────── */}}
+  {{- with $p.sigma }}
+  <section class="rule-section">
+    <h2 class="rule-section-title">
+      <span class="rs-icon">σ</span> Sigma Rule
+    </h2>
+    <div class="rule-code-wrap">
+      {{ highlight . "yaml" "lineNos=false,style=monokai" }}
+    </div>
+  </section>
+  {{- end }}
+
+  {{/* ── Converted Queries ───────────────────────────────── */}}
+  {{- with $p.converted_queries }}
+  <section class="rule-section">
+    <h2 class="rule-section-title">
+      <span class="rs-icon">⇄</span> Converted Queries
+    </h2>
+    {{- range . }}
+    <div class="query-block">
+      <div class="query-platform">{{ .platform }}</div>
+      <div class="rule-code-wrap">
+        {{ highlight (.query | strings.TrimRight "\n ") (.language | default "sql") "lineNos=false,style=monokai" }}
+      </div>
+    </div>
+    {{- end }}
+  </section>
+  {{- end }}
+
+  {{/* ── Markdown body (Testing Notes, FPs, References) ──── */}}
+  {{- if .Content }}
+  <div class="rule-body">
+    {{ .Content }}
+  </div>
+  {{- end }}
+
+</div>
+
+<style>
+.rule-breadcrumb {
+  margin-bottom: 1.5rem;
+  font-size: 0.78rem;
+  font-family: monospace;
+}
+
+.rule-breadcrumb a {
+  color: var(--secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.rule-breadcrumb a:hover { color: var(--primary); }
+
+.rule-page-header {
+  margin-bottom: 1.5rem;
+}
+
+.rule-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.rp-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+}
+
+.rp-tactic { background: rgba(255,255,255,0.06); color: var(--secondary); }
+
+.rp-sev-critical { background: rgba(229,62,62,0.15);  color: #fc8181; }
+.rp-sev-high     { background: rgba(221,107,32,0.15); color: #f6ad55; }
+.rp-sev-medium   { background: rgba(214,158,46,0.15); color: #f6e05e; }
+.rp-sev-low      { background: rgba(49,130,206,0.15); color: #63b3ed; }
+.rp-sev-info     { background: rgba(113,128,150,0.15);color: #a0aec0; }
+
+.rp-status-stable       { background: rgba(56,161,105,0.15); color: #68d391; }
+.rp-status-test         { background: rgba(214,158,46,0.12); color: #f6e05e; }
+.rp-status-experimental { background: rgba(113,128,150,0.12);color: #a0aec0; }
+
+.rule-page-title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0 0 0.6rem;
+  color: var(--primary);
+}
+
+.rule-page-desc {
+  font-size: 0.93rem;
+  color: var(--secondary);
+  line-height: 1.65;
+  max-width: 680px;
+  margin: 0;
+}
+
+.rule-meta-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+  font-size: 0.84rem;
+}
+
+.rm-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.rm-row:last-child { border-bottom: none; }
+
+.rm-key {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  min-width: 7rem;
+  flex-shrink: 0;
+}
+
+.rm-val { color: var(--primary); font-family: monospace; font-size: 0.82rem; }
+
+.rm-attack-link {
+  color: #5b9cf6;
+  text-decoration: none;
+}
+
+.rm-attack-link:hover { text-decoration: underline; }
+
+.rule-section {
+  margin-bottom: 2.5rem;
+}
+
+.rule-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  padding: 0;
+}
+
+.rs-icon {
+  font-size: 1rem;
+  color: var(--primary);
+}
+
+.rule-code-wrap {
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.rule-code-wrap .highlight {
+  margin: 0;
+}
+
+.rule-code-wrap pre {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  overflow-x: auto;
+}
+
+.query-block {
+  margin-bottom: 1.25rem;
+}
+
+.query-block:last-child { margin-bottom: 0; }
+
+.query-platform {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  padding: 0.4rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+}
+
+.rule-body {
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+  margin-top: 1rem;
+}
+
+.rule-body h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 1.75rem 0 0.75rem;
+  color: var(--primary);
+}
+
+.rule-body h2:first-child { margin-top: 0; }
+
+.rule-body p, .rule-body li {
+  font-size: 0.88rem;
+  color: var(--secondary);
+  line-height: 1.7;
+}
+
+.rule-body ul { padding-left: 1.25rem; }
+
+.rule-body a { color: #5b9cf6; }
+</style>
+{{- end }}
