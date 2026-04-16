@@ -1,0 +1,137 @@
+baseURL: "https://m1ran4a.github.io/"
+languageCode: "en-us"
+title: "Hugo Miranda — SIEM Engineer & Detection Engineer"
+theme: PaperMod
+pagination:
+  pagerSize: 5
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+
+minify:
+  disableXML: true
+  minifyOutput: true
+
+params:
+  env: production
+  title: "Hugo Miranda"
+  description: "SIEM Engineer & Detection Engineer — NIS2/DORA compliance, detection-as-code, and SIEM architecture."
+  keywords: [SIEM, Detection Engineering, Cybersecurity, NIS2, DORA, Sigma, MITRE ATT&CK]
+  author: Hugo Miranda
+  images: []
+
+  defaultTheme: dark
+  disableThemeToggle: false
+
+  ShowReadingTime: true
+  ShowShareButtons: false
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowWordCount: false
+  ShowRssButtonInSectionTermList: true
+  UseHugoToc: true
+  disableSpecial1stPost: false
+  disableScrollToTop: false
+  comments: false
+  hidemeta: false
+  hideSummary: false
+  showtoc: false
+  tocopen: false
+
+  assets:
+    disableHLJS: true
+    favicon: "/favicon.ico"
+
+  label:
+    text: "Hugo Miranda"
+    icon: /favicon.ico
+    iconHeight: 35
+
+  profileMode:
+    enabled: false
+
+  homeInfoParams:
+    Title: "Hugo Miranda"
+    Content: >
+      SIEM Engineer & Detection Engineer.
+      I design detection pipelines, implement SIEM architectures, and help organisations
+      meet NIS2 and DORA compliance requirements — without the noise.
+
+  socialIcons:
+    - name: linkedin
+      url: "https://linkedin.com/in/m1ran4a/"
+    - name: github
+      url: "https://github.com/m1ran4a"
+    - name: email
+      url: "mailto:hugo.amiranda@ne0tw0.pt"
+
+  analytics:
+    google:
+      SiteVerificationTag: ""
+
+  cover:
+    hidden: true
+    hiddenInList: true
+    hiddenInSingle: true
+
+  editPost:
+    URL: ""
+    Text: ""
+    appendFilePath: false
+
+  fuseOpts:
+    isCaseSensitive: false
+    shouldSort: true
+    location: 0
+    distance: 1000
+    threshold: 0.4
+    minMatchCharLength: 0
+    limit: 10
+    keys: ["title", "permalink", "summary", "content"]
+
+menu:
+  main:
+    - identifier: home
+      name: Home
+      url: /
+      weight: 10
+    - identifier: about
+      name: About
+      url: /about/
+      weight: 20
+    - identifier: blog
+      name: Blog
+      url: /blog/
+      weight: 30
+    - identifier: detection-lab
+      name: Detection Lab
+      url: /detection-lab/
+      weight: 40
+    - identifier: cv
+      name: CV
+      url: /cv/
+      weight: 50
+
+taxonomies:
+  tag: tags
+  category: categories
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    noClasses: false
+    anchorLineNos: true
+    codeFences: true
+    guessSyntax: true
+    lineNos: true
+    style: monokai
