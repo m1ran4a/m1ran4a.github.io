@@ -1,0 +1,22 @@
+{{- with site.Params.homeInfoParams }}
+<article class="first-entry home-info hero-section">
+    <header class="entry-header">
+        <span class="hero-label">SIEM Engineer &amp; Detection Engineer</span>
+        <h1>{{ .Title | markdownify }}</h1>
+    </header>
+    <div class="entry-content md-content hero-bio">
+        <p>
+            I design detection pipelines, implement SIEM architectures, and help organisations
+            meet NIS2 and DORA compliance requirements — without the noise.
+        </p>
+    </div>
+    <footer class="entry-footer hero-footer">
+        {{ partial "social_icons.html" (dict "align" "left") }}
+        <div class="hero-cta">
+            <a href="/about/" class="cta-link">About</a>
+            <a href="/blog/" class="cta-link">Writing</a>
+            <a href="/cv/" class="cta-link">CV</a>
+        </div>
+    </footer>
+</article>
+{{- end -}}
