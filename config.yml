@@ -117,12 +117,19 @@ menu:
 taxonomies:
   tag: tags
   category: categories
+  mitre_technique: mitre_techniques
 
 outputs:
   home:
     - HTML
     - RSS
     - JSON
+  taxonomy:
+    - HTML
+    - RSS
+  term:
+    - HTML
+    - RSS
 
 markup:
   goldmark:

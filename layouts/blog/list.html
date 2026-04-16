@@ -1,0 +1,277 @@
+{{- define "main" }}
+<header class="page-header">
+  <h1>{{ .Title }}</h1>
+  {{- if .Description }}
+  <p class="page-description">{{ .Description }}</p>
+  {{- end }}
+</header>
+
+{{- $allTags := .Site.Taxonomies.tags }}
+{{- $allCats := .Site.Taxonomies.categories }}
+
+{{- if or $allTags $allCats }}
+<div class="blog-filters">
+  {{- if $allTags }}
+  <div class="filter-row">
+    <span class="filter-label">Tags</span>
+    <div class="filter-pills">
+      {{- range $allTags.Alphabetical }}
+      <a href="{{ .Page.RelPermalink }}" class="filter-pill">
+        {{- .Page.Title -}}<span class="pill-count">{{ .Count }}</span>
+      </a>
+      {{- end }}
+    </div>
+  </div>
+  {{- end }}
+  {{- if $allCats }}
+  <div class="filter-row">
+    <span class="filter-label">Categories</span>
+    <div class="filter-pills">
+      {{- range $allCats.Alphabetical }}
+      <a href="{{ .Page.RelPermalink }}" class="filter-pill filter-pill-cat">
+        {{- .Page.Title -}}<span class="pill-count">{{ .Count }}</span>
+      </a>
+      {{- end }}
+    </div>
+  </div>
+  {{- end }}
+</div>
+{{- end }}
+
+<div class="blog-post-list">
+  {{- if not .Pages }}
+  <p class="blog-empty">No posts yet — check back soon.</p>
+  {{- end }}
+
+  {{- range .Pages.ByDate.Reverse }}
+  <article class="blog-post-card">
+    <div class="post-card-meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 Jan 2006" }}</time>
+      <span class="dot">·</span>
+      <span class="read-time">{{ .ReadingTime }} min read</span>
+      {{- range .Params.categories }}
+      <a href="{{ "/categories/" | relURL }}{{ . | urlize }}/" class="cat-chip">{{ . }}</a>
+      {{- end }}
+    </div>
+
+    <h2 class="post-card-title">
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </h2>
+
+    {{- if .Summary }}
+    <p class="post-card-summary">{{ .Summary | plainify | truncate 160 }}</p>
+    {{- end }}
+
+    <footer class="post-card-footer">
+      <div class="post-card-tags">
+        {{- range .Params.tags }}
+        <a href="{{ "/tags/" | relURL }}{{ . | urlize }}/" class="tag-chip">#{{ . }}</a>
+        {{- end }}
+      </div>
+      {{- if .Params.mitre_techniques }}
+      <div class="mitre-chips">
+        {{- range .Params.mitre_techniques }}
+        <a href="{{ "/mitre_techniques/" | relURL }}{{ . | urlize }}/" class="mitre-chip">{{ . }}</a>
+        {{- end }}
+      </div>
+      {{- end }}
+    </footer>
+  </article>
+  {{- end }}
+</div>
+
+<style>
+.page-description {
+  color: var(--secondary);
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.blog-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 2.5rem;
+}
+
+.filter-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.filter-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  min-width: 5rem;
+  padding-top: 0.3rem;
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--secondary);
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.filter-pill:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.filter-pill-cat {
+  border-style: dashed;
+}
+
+.pill-count {
+  font-size: 0.65rem;
+  opacity: 0.6;
+}
+
+.blog-post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.blog-post-card {
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.blog-post-card:last-child {
+  border-bottom: none;
+}
+
+.post-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  color: var(--secondary);
+  font-family: monospace;
+  margin-bottom: 0.5rem;
+}
+
+.dot { opacity: 0.4; }
+
+.read-time { opacity: 0.7; }
+
+.cat-chip {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.5rem;
+  border: 1px dashed var(--border);
+  border-radius: 2px;
+  color: var(--secondary);
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.cat-chip:hover { color: var(--primary); border-color: var(--primary); }
+
+.post-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 0.6rem;
+  letter-spacing: -0.01em;
+}
+
+.post-card-title a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.post-card-title a:hover { text-decoration: underline; }
+
+.post-card-summary {
+  font-size: 0.88rem;
+  color: var(--secondary);
+  line-height: 1.65;
+  margin: 0 0 1rem;
+  max-width: 680px;
+}
+
+.post-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.post-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.tag-chip {
+  font-size: 0.72rem;
+  font-family: monospace;
+  padding: 0.15rem 0.5rem;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--secondary);
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.tag-chip:hover { color: var(--primary); border-color: var(--primary); }
+
+.mitre-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.mitre-chip {
+  font-size: 0.68rem;
+  font-family: monospace;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  background: rgba(47, 128, 237, 0.08);
+  border: 1px solid rgba(47, 128, 237, 0.25);
+  border-radius: 2px;
+  color: #5b9cf6;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.mitre-chip:hover {
+  background: rgba(47, 128, 237, 0.15);
+  border-color: rgba(47, 128, 237, 0.5);
+}
+
+.blog-empty {
+  color: var(--secondary);
+  font-style: italic;
+  padding: 2rem 0;
+}
+</style>
+{{- end }}

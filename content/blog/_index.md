@@ -1,4 +1,4 @@
 ---
 title: "Blog"
-description: "Technical writing on detection engineering, SIEM architecture, and security operations."
+description: "Detection engineering, SIEM architecture, investigation writeups, and security research."
 ---

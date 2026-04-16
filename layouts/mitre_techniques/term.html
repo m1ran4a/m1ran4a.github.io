@@ -1,0 +1,73 @@
+{{- define "main" }}
+<header class="page-header">
+  <div class="mitre-term-label">ATT&CK Technique</div>
+  <h1>{{ .Title | upper }}</h1>
+  {{- $url := printf "https://attack.mitre.org/techniques/%s/" (.Title | upper | strings.TrimPrefix "T") }}
+  <p class="mitre-term-meta">
+    <a href="https://attack.mitre.org/techniques/{{ .Title | upper }}/" target="_blank" rel="noopener">
+      View on MITRE ATT&amp;CK ↗
+    </a>
+    · {{ len .Pages }} {{ if eq (len .Pages) 1 }}post{{ else }}posts{{ end }}
+  </p>
+</header>
+
+<div class="blog-post-list">
+  {{- range .Pages.ByDate.Reverse }}
+  <article class="blog-post-card">
+    <div class="post-card-meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 Jan 2006" }}</time>
+      <span class="dot">·</span>
+      <span class="read-time">{{ .ReadingTime }} min read</span>
+      {{- range .Params.categories }}
+      <a href="{{ "/categories/" | relURL }}{{ . | urlize }}/" class="cat-chip">{{ . }}</a>
+      {{- end }}
+    </div>
+    <h2 class="post-card-title">
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </h2>
+    {{- if .Summary }}
+    <p class="post-card-summary">{{ .Summary | plainify | truncate 160 }}</p>
+    {{- end }}
+    <footer class="post-card-footer">
+      <div class="post-card-tags">
+        {{- range .Params.tags }}
+        <a href="{{ "/tags/" | relURL }}{{ . | urlize }}/" class="tag-chip">#{{ . }}</a>
+        {{- end }}
+      </div>
+      {{- if .Params.mitre_techniques }}
+      <div class="mitre-chips">
+        {{- range .Params.mitre_techniques }}
+        <a href="{{ "/mitre_techniques/" | relURL }}{{ . | urlize }}/" class="mitre-chip">{{ . }}</a>
+        {{- end }}
+      </div>
+      {{- end }}
+    </footer>
+  </article>
+  {{- end }}
+</div>
+
+<style>
+.mitre-term-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5b9cf6;
+  margin-bottom: 0.4rem;
+}
+
+.mitre-term-meta {
+  font-size: 0.8rem;
+  font-family: monospace;
+  color: var(--secondary);
+  margin-top: 0.5rem;
+}
+
+.mitre-term-meta a {
+  color: #5b9cf6;
+  text-decoration: none;
+}
+
+.mitre-term-meta a:hover { text-decoration: underline; }
+</style>
+{{- end }}
