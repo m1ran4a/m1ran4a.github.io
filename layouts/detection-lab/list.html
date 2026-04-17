@@ -1,0 +1,260 @@
+{{- define "main" }}
+{{- $pages := .Pages }}
+
+{{/* Collect unique tactics */}}
+{{- $tactics := slice }}
+{{- range $pages }}
+  {{- with .Params.mitre_tactic }}
+    {{- $tactics = $tactics | append . }}
+  {{- end }}
+{{- end }}
+{{- $tactics = $tactics | uniq | sort }}
+
+<header class="page-header dl-header">
+  <h1>{{ .Title }}</h1>
+  {{- if .Content }}
+  <div class="dl-intro">{{ .Content }}</div>
+  {{- end }}
+</header>
+
+{{- if $pages }}
+<div class="dl-stats">
+  <div class="dl-stat">
+    <span class="dl-stat-n">{{ len $pages }}</span>
+    <span class="dl-stat-l">Rules</span>
+  </div>
+  <div class="dl-stat">
+    <span class="dl-stat-n">{{ len $tactics }}</span>
+    <span class="dl-stat-l">Tactics</span>
+  </div>
+  {{- $high := 0 }}{{- $crit := 0 }}
+  {{- range $pages }}
+    {{- if eq (lower (.Params.severity | default "")) "high" }}{{- $high = add $high 1 }}{{- end }}
+    {{- if eq (lower (.Params.severity | default "")) "critical" }}{{- $crit = add $crit 1 }}{{- end }}
+  {{- end }}
+  <div class="dl-stat">
+    <span class="dl-stat-n">{{ add $high $crit }}</span>
+    <span class="dl-stat-l">High / Critical</span>
+  </div>
+</div>
+
+{{- if $tactics }}
+<div class="dl-filters">
+  <button class="tactic-btn active" data-tactic="all" onclick="dlFilter(this,'all')">All</button>
+  {{- range $tactics }}
+  <button class="tactic-btn" data-tactic="{{ . | lower }}" onclick="dlFilter(this,'{{ . | lower }}')">{{ . }}</button>
+  {{- end }}
+</div>
+{{- end }}
+{{- end }}
+
+<div class="rule-grid" id="rule-grid">
+  {{- if not $pages }}
+  <p class="dl-empty">No rules published yet — check back soon.</p>
+  {{- end }}
+
+  {{- range $pages.ByDate.Reverse }}
+  {{- $sev := lower (.Params.severity | default "medium") }}
+  {{- $status := lower (.Params.status | default "experimental") }}
+  {{- $tactic := .Params.mitre_tactic | default "" }}
+  <a class="rule-card" href="{{ .RelPermalink }}"
+     data-tactic="{{ $tactic | lower }}"
+     data-severity="{{ $sev }}">
+    <div class="rule-card-top">
+      {{- if $tactic }}
+      <span class="rc-tactic">{{ $tactic }}</span>
+      {{- end }}
+      <span class="rc-badge rc-sev-{{ $sev }}">{{ $sev }}</span>
+      <span class="rc-badge rc-status-{{ $status }}">{{ $status }}</span>
+    </div>
+    <h3 class="rule-card-title">{{ .Title }}</h3>
+    {{- with .Params.mitre_technique }}
+    <div class="rule-card-technique">{{ . }}{{- with $.Page.Params.technique_name }} · {{ . }}{{- end }}</div>
+    {{- end }}
+    {{- if .Summary }}
+    <p class="rule-card-summary">{{ .Summary | plainify | truncate 110 }}</p>
+    {{- end }}
+    {{- with .Params.logsource }}
+    <div class="rule-card-source">{{ . }}</div>
+    {{- end }}
+  </a>
+  {{- end }}
+</div>
+
+<script>
+function dlFilter(btn, tactic) {
+  document.querySelectorAll('.tactic-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.rule-card').forEach(card => {
+    card.style.display = (tactic === 'all' || card.dataset.tactic === tactic) ? '' : 'none';
+  });
+  const visible = document.querySelectorAll('.rule-card:not([style*="none"])').length;
+  const count = document.getElementById('rule-count');
+  if (count) count.textContent = visible;
+}
+</script>
+
+<style>
+.dl-header { margin-bottom: 0; }
+
+.dl-intro {
+  font-size: 0.88rem;
+  color: var(--secondary);
+  line-height: 1.7;
+  max-width: 680px;
+  margin: 0.75rem 0 2rem;
+}
+
+.dl-intro p { margin: 0 0 0.5rem; }
+
+.dl-stats {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 1.25rem;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.dl-stat { display: flex; flex-direction: column; gap: 0.1rem; }
+
+.dl-stat-n {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--primary);
+}
+
+.dl-stat-l {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--secondary);
+}
+
+.dl-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.75rem;
+}
+
+.tactic-btn {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tactic-btn:hover { border-color: var(--primary); color: var(--primary); }
+.tactic-btn.active { border-color: var(--primary); color: var(--primary); background: rgba(255,255,255,0.04); }
+
+.rule-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.rule-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--code-bg);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, transform 0.1s;
+}
+
+.rule-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.rule-card-top {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.rc-tactic {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  margin-right: auto;
+}
+
+.rc-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+}
+
+/* Severity */
+.rc-sev-critical { background: rgba(229,62,62,0.15); color: #fc8181; }
+.rc-sev-high     { background: rgba(221,107,32,0.15); color: #f6ad55; }
+.rc-sev-medium   { background: rgba(214,158,46,0.15); color: #f6e05e; }
+.rc-sev-low      { background: rgba(49,130,206,0.15); color: #63b3ed; }
+.rc-sev-info     { background: rgba(113,128,150,0.15); color: #a0aec0; }
+
+/* Status */
+.rc-status-stable       { background: rgba(56,161,105,0.15); color: #68d391; }
+.rc-status-test         { background: rgba(214,158,46,0.12); color: #f6e05e; }
+.rc-status-experimental { background: rgba(113,128,150,0.12); color: #a0aec0; }
+
+.rule-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.rule-card-technique {
+  font-size: 0.72rem;
+  font-family: monospace;
+  color: #5b9cf6;
+  letter-spacing: 0.04em;
+}
+
+.rule-card-summary {
+  font-size: 0.8rem;
+  color: var(--secondary);
+  line-height: 1.55;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.rule-card-source {
+  font-size: 0.68rem;
+  font-family: monospace;
+  color: var(--secondary);
+  opacity: 0.7;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.dl-empty {
+  color: var(--secondary);
+  font-style: italic;
+  grid-column: 1/-1;
+}
+</style>
+{{- end }}
