@@ -1,0 +1,175 @@
+{{- define "main" }}
+
+{{/* ── Hero ─────────────────────────────────────────── */}}
+<section class="home-hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-scanline"></div>
+
+  <div class="hero-inner">
+    <div class="hero-availability">
+      <span class="avail-dot"></span>
+      Open to SIEM &amp; Detection Engineering roles
+    </div>
+
+    <div class="hero-prompt">
+      <span class="hp-ps">$</span>
+      <span class="hp-cmd">detect</span>
+      <span class="hp-arg">--analyst</span>
+      <span class="hp-val">hugo_miranda</span>
+      <span class="hp-arg">--platform</span>
+      <span class="hp-val">qradar,sentinel,elastic</span>
+      <span class="hp-arg">--framework</span>
+      <span class="hp-val">mitre-attck</span>
+    </div>
+
+    <span class="hero-label">SIEM Engineer &nbsp;·&nbsp; Detection Engineer &nbsp;·&nbsp; NIS2 / DORA</span>
+    <h1 class="hero-name">Hugo Miranda<span class="cursor-blink">_</span></h1>
+
+    <p class="hero-bio">
+      I design detection pipelines, implement SIEM architectures, and help organisations
+      meet NIS2 and DORA compliance requirements — without the noise.
+    </p>
+
+    <div class="hero-stats">
+      <div class="hs">
+        <span class="hs-n">4+</span>
+        <span class="hs-l">Years in Security</span>
+      </div>
+      <div class="hs-sep"></div>
+      <div class="hs">
+        <span class="hs-n">23k+</span>
+        <span class="hs-l">Log Sources</span>
+      </div>
+      <div class="hs-sep"></div>
+      <div class="hs">
+        <span class="hs-n">3</span>
+        <span class="hs-l">SIEM Platforms</span>
+      </div>
+      <div class="hs-sep"></div>
+      <div class="hs">
+        <span class="hs-n">100%</span>
+        <span class="hs-l">ATT&amp;CK Mapped</span>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      {{ partial "social_icons.html" (dict "align" "left") }}
+      <div class="hero-cta">
+        <a href="/detection-lab/" class="btn-primary">Detection Lab</a>
+        <a href="/about/" class="btn-outline">About</a>
+        <a href="/cv/" class="btn-ghost">CV →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{/* ── Expertise ─────────────────────────────────────── */}}
+<section class="home-section">
+  <div class="home-section-header">
+    <span class="hsh-tag">expertise</span>
+    <div class="hsh-line"></div>
+  </div>
+  <div class="exp-grid">
+    <div class="exp-card">
+      <div class="exp-icon-wrap">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+        </svg>
+      </div>
+      <h3>Detection Engineering</h3>
+      <p>Sigma rules mapped to MITRE ATT&CK, detection-as-code pipelines, false positive tuning across enterprise SIEM estates.</p>
+      <a href="/detection-lab/" class="exp-link">View rules →</a>
+    </div>
+    <div class="exp-card">
+      <div class="exp-icon-wrap">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z"/>
+        </svg>
+      </div>
+      <h3>SIEM Architecture</h3>
+      <p>IBM QRadar production estates exceeding 23,000 log sources — onboarding, DSM development, health monitoring, capacity planning.</p>
+      <a href="/about/" class="exp-link">Learn more →</a>
+    </div>
+    <div class="exp-card">
+      <div class="exp-icon-wrap">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+        </svg>
+      </div>
+      <h3>NIS2 &amp; DORA Compliance</h3>
+      <p>Translating regulatory requirements into technical controls — evidence collection, gap analysis, and audit-ready documentation.</p>
+      <a href="/cv/" class="exp-link">See experience →</a>
+    </div>
+  </div>
+</section>
+
+{{/* ── Detection Lab Preview ─────────────────────────── */}}
+{{- $rules := where site.RegularPages "Section" "detection-lab" }}
+{{- if $rules }}
+<section class="home-section">
+  <div class="home-section-header">
+    <span class="hsh-tag">detection-lab</span>
+    <div class="hsh-line"></div>
+    <a href="/detection-lab/" class="hsh-more">all rules →</a>
+  </div>
+  <div class="dl-preview-grid">
+    {{- range first 3 $rules.ByDate.Reverse }}
+    {{- $sev := lower (.Params.severity | default "medium") }}
+    <a class="dlp-card" href="{{ .RelPermalink }}" data-severity="{{ $sev }}">
+      <div class="dlp-top">
+        {{- with .Params.mitre_tactic }}
+        <span class="dlp-tactic">{{ . }}</span>
+        {{- end }}
+        <span class="dlp-badge dlp-sev-{{ $sev }}">{{ $sev }}</span>
+        {{- with .Params.status }}
+        <span class="dlp-badge dlp-status-{{ lower . }}">{{ . }}</span>
+        {{- end }}
+      </div>
+      <h4 class="dlp-title">{{ .Title }}</h4>
+      {{- with .Params.mitre_technique }}
+      <div class="dlp-tech">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        {{ . }}{{- with $.Page.Site.GetPage (printf "/detection-lab/%s" (urlize .)) }}{{- end }}
+        {{- with (index $.Site.Pages 0).Site }}{{- end }}
+      </div>
+      {{- end }}
+      {{- if .Summary }}
+      <p class="dlp-summary">{{ .Summary | plainify | truncate 90 }}</p>
+      {{- end }}
+      <div class="dlp-footer">
+        <span class="dlp-source">{{ .Params.logsource }}</span>
+        <span class="dlp-read">View rule →</span>
+      </div>
+    </a>
+    {{- end }}
+  </div>
+</section>
+{{- end }}
+
+{{/* ── Recent Writing ────────────────────────────────── */}}
+{{- $posts := where site.RegularPages "Section" "blog" }}
+{{- if $posts }}
+<section class="home-section">
+  <div class="home-section-header">
+    <span class="hsh-tag">writing</span>
+    <div class="hsh-line"></div>
+    <a href="/blog/" class="hsh-more">all posts →</a>
+  </div>
+  <div class="posts-preview">
+    {{- range first 4 $posts.ByDate.Reverse }}
+    <a class="ppr-row" href="{{ .RelPermalink }}">
+      <span class="ppr-date">{{ .Date.Format "Jan 2006" }}</span>
+      <span class="ppr-title">{{ .Title }}</span>
+      <div class="ppr-meta">
+        {{- range first 2 .Params.tags }}
+        <span class="ppr-tag">#{{ . }}</span>
+        {{- end }}
+      </div>
+      <span class="ppr-arrow">→</span>
+    </a>
+    {{- end }}
+  </div>
+</section>
+{{- end }}
+
+{{- end }}
