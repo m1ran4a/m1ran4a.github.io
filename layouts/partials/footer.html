@@ -1,0 +1,55 @@
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-copy">
+      &copy; {{ now.Year }} Hugo Miranda
+      &nbsp;&middot;&nbsp;
+      <a href="https://linkedin.com/in/m1ran4a/" target="_blank" rel="noopener">LinkedIn</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://github.com/m1ran4a" target="_blank" rel="noopener">GitHub</a>
+      &nbsp;&middot;&nbsp;
+      <a href="mailto:hugo.amiranda@ne0tw0.pt">Email</a>
+    </span>
+    <span class="footer-built">
+      Built with
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>
+      &amp;
+      <a href="https://github.com/adityatelange/hugo-PaperMod" target="_blank" rel="noopener">PaperMod</a>
+    </span>
+  </div>
+</footer>
+
+<style>
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 0;
+  margin-top: 3rem;
+}
+
+.footer-inner {
+  max-width: var(--nav-width, 1024px);
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--secondary);
+}
+
+.footer-inner a {
+  color: var(--secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-inner a:hover { color: var(--primary); }
+
+.footer-built { opacity: 0.55; }
+
+@media (max-width: 600px) {
+  .footer-inner { flex-direction: column; text-align: center; gap: 0.35rem; }
+}
+</style>

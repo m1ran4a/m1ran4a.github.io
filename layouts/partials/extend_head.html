@@ -1,3 +1,13 @@
+{{/* Favicon */}}
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate icon" href="/favicon.svg">
+
+{{/* Default OG image fallback */}}
+{{- if not .Params.images }}
+<meta property="og:image" content="{{ .Site.BaseURL }}images/og-default.png">
+<meta name="twitter:image" content="{{ .Site.BaseURL }}images/og-default.png">
+{{- end }}
+
 <style>
   /* Hero section overrides */
   .hero-section {
