@@ -1,6 +1,15 @@
+{{/* Fonts: Manrope (display+body), JetBrains Mono (code), Source Serif 4 (accent prose) */}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
 {{/* Favicon */}}
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="alternate icon" href="/favicon.svg">
+
+{{/* SEO & Social */}}
+<meta name="author" content="Hugo Miranda">
+<meta name="theme-color" content="#0a0e14">
 
 {{/* Default OG image fallback */}}
 {{- if not .Params.images }}
@@ -27,9 +36,9 @@
 
   .hero-section h1 {
     font-size: clamp(2rem, 5vw, 3.2rem);
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1.15;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
     margin-bottom: 1.25rem;
     color: var(--primary);
   }
@@ -63,19 +72,15 @@
     text-decoration: none;
     border-bottom: 1px solid var(--border);
     padding-bottom: 1px;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s ease, color 0.15s ease;
   }
 
   .cta-link:hover {
-    border-color: var(--primary);
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
-  /* Tighten up the nav */
-  .nav {
-    border-bottom: 1px solid var(--border);
-  }
-
-  /* Code blocks — dark, no distraction */
+  /* Code blocks */
   .highlight pre {
     border-radius: 4px;
   }

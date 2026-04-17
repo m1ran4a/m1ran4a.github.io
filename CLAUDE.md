@@ -1,162 +1,130 @@
-# Site Maintenance Guide
+# CLAUDE.md — Project Instructions for Claude Code
 
-Hugo static site at **https://m1ran4a.github.io**  
-Theme: PaperMod | Active branch: `claude/migrate-to-hugo-E7N49`
+## Project Overview
 
-## Local Development
+This is Hugo Miranda's personal website and security portfolio, built with Hugo + PaperMod theme, hosted on GitHub Pages at https://m1ran4a.github.io.
 
-```sh
-make serve      # dev server at http://localhost:1313 (drafts visible)
-make build      # production build → public/
-```
+## Tech Stack
 
-Hugo binary lives at `/tmp/hugo` (v0.147.0 extended). The system apt version is too old.
+- **Static site generator:** Hugo (v0.147.0 extended — binary at `/tmp/hugo`, NOT system `hugo`)
+- **Theme:** PaperMod (installed via git clone in CI, NOT submodule)
+- **Hosting:** GitHub Pages via GitHub Actions
+- **CSS:** Custom design system in `assets/css/extended/custom.css`
+- **Fonts:** Manrope (display/body), JetBrains Mono (code), Source Serif 4 (accent)
+- **Deployment:** Push to `main` → GitHub Actions builds and deploys automatically
 
----
-
-## Publishing a Blog Post
-
-```sh
-make new-post
-# → Enter title when prompted
-# → File created at content/blog/<slug>.md
-```
-
-Then edit the file:
-1. Fill in `summary` (1–2 sentence description shown in the list)
-2. Add `tags`, `categories`, and `mitre_techniques` (if applicable)
-3. Write content in Markdown below the `---`
-4. Change `draft: false` when ready to publish
-5. `git add content/blog/<slug>.md && git commit -m "post: <title>" && git push`
-
-GitHub Actions deploys automatically on push.
-
-### Blog post front matter reference
-
-```yaml
----
-title: "Your Post Title"
-date: 2026-04-17
-draft: false
-author: "Hugo Miranda"
-summary: "One-sentence summary shown in the post list."
-tags: [detection-engineering, sigma, mitre-attack]
-categories: [Detection Research]
-mitre_techniques: [T1136.001]
----
-```
-
----
-
-## Adding a Detection Rule
-
-```sh
-make new-rule
-# → Enter rule title when prompted
-# → File created at content/detection-lab/<slug>.md
-```
-
-Fill in the front matter fields:
-
-| Field | Example |
-|---|---|
-| `mitre_technique` | `T1136.001` |
-| `mitre_tactic` | `Persistence` |
-| `technique_name` | `Local Account — Create` |
-| `severity` | `critical` / `high` / `medium` / `low` / `info` |
-| `status` | `stable` / `test` / `experimental` |
-| `logsource` | `Windows Security Events` |
-| `sigma` | multi-line YAML Sigma rule (use `\|` block scalar) |
-| `converted_queries` | list of `{platform, language, query}` objects |
-
-Set `draft: false` and push.
-
----
-
-## Updating the CV
-
-Edit **`content/cv.md`** — all data is YAML front matter, no HTML needed.
-
-- **Add a job**: append to `experience[]` with `company`, `role`, `period`, `bullets[]`
-- **Mark current role**: add `current: true` → renders a glowing blue dot
-- **Add a cert**: append to `certifications[]` with `status: active` or `status: in-progress`
-- **Update skills**: edit `skills[]` groups and `items[]` chips
-- **Upload PDF**: place the file at `static/files/Hugo_Miranda_CV.pdf` (referenced by `pdf:` front matter key)
-
----
-
-## Updating the Home Page
-
-**Bio text**: edit `config.yml` → `params.homeInfoParams.Content`
-
-**Stats bar numbers** (years, log sources, etc.): edit `layouts/partials/home_info.html` — the `.hs-n` spans
-
-**Availability badge**: edit the text inside `hero-availability` div in `layouts/partials/home_info.html`
-
-**Social links**: edit `config.yml` → `params.socialIcons`
-
----
-
-## Updating the About Page
-
-Edit `content/about.md` directly. The page uses inline HTML (goldmark unsafe mode is on) so you can mix Markdown and HTML freely.
-
----
-
-## Site Structure
+## Directory Structure
 
 ```
-content/
-  _index.md               home page description
-  about.md                About page (inline HTML + Markdown)
-  cv.md                   CV — all data in YAML front matter
-  blog/
-    _index.md             Blog section header
-    <slug>.md             Blog posts
-  detection-lab/
-    _index.md             Detection Lab section header
-    <slug>.md             Detection rules
-
-layouts/
-  partials/
-    home_info.html        Hero section (availability badge, stats, CTAs)
-    extend_head.html      Extra <head> tags, hero CSS, OG image fallback
-    footer.html           Site footer
-  blog/
-    list.html             Blog post list with tag/category filters
-  detection-lab/
-    list.html             Rule catalog with tactic filter + stats
-    single.html           Individual rule page (Sigma + queries)
-  page/
-    cv.html               CV layout (renders front matter data)
-  mitre_techniques/
-    term.html             Per-technique taxonomy page
-  404.html                Custom 404 page
-
-assets/css/extended/
-  custom.css              Dark palette, hover effects, animations
-  syntax.css              Monokai syntax highlighting (generated)
-
-static/
-  favicon.svg             HM monogram
-  files/                  Place Hugo_Miranda_CV.pdf here
-  images/                 Place og-default.png (1200×630) here
-
-archetypes/
-  blog.md                 Template for new blog posts
-  detection-lab.md        Template for new detection rules
-
-config.yml                All site settings, nav, social links
-Makefile                  Maintenance commands
+.
+├── config.yml              # Hugo configuration
+├── Makefile                # Maintenance commands (make help)
+├── content/
+│   ├── _index.md           # Home page
+│   ├── about.md            # Professional profile
+│   ├── cv.md               # CV with timeline, skills, certs
+│   ├── blog/               # Blog posts (writeups, research, CTFs)
+│   │   ├── _index.md       # Blog section landing
+│   │   └── *.md            # Individual posts
+│   └── detection-lab/      # Sigma rules portfolio
+│       ├── _index.md       # Detection Lab landing
+│       └── *.md            # Individual detection rules
+├── archetypes/
+│   ├── blog.md             # Template for new blog posts
+│   └── detection-lab.md    # Template for new Sigma rules
+├── assets/css/extended/
+│   ├── custom.css          # Full design system (colors, components, layout)
+│   └── syntax.css          # Monokai syntax highlighting
+├── layouts/partials/
+│   ├── home_info.html      # Hero section (availability badge, stats, CTAs)
+│   ├── extend_head.html    # Font imports, favicon, OG tags, hero CSS
+│   └── footer.html         # Site footer
+├── static/
+│   ├── favicon.svg         # HM monogram favicon
+│   └── files/              # Downloadable files (CV PDF, etc.)
+└── .github/workflows/
+    └── hugo.yml            # CI/CD pipeline
 ```
 
----
+## Common Tasks
 
-## Deployment
+### Create a new blog post
+```bash
+make post TITLE="my-post-slug"
+# Then edit content/blog/my-post-slug.md
+# Set draft: false when ready
+# Run: make publish MSG="new post: my topic"
+```
 
-Push to `claude/migrate-to-hugo-E7N49` → GitHub Actions builds and deploys.  
-Merge the PR to `main` to deploy to production.  
-Pages source must be set to **GitHub Actions** in repo Settings → Pages.
+### Create a new detection rule
+```bash
+make rule TITLE="lsass-memory-access"
+# Then edit content/detection-lab/lsass-memory-access.md
+# Follow the archetype template
+# Run: make publish MSG="new rule: LSASS memory access"
+```
+
+### Update the CV
+- Edit `content/cv.md` for text changes (experience, certs, skills)
+- To update the PDF: `make update-cv PDF="/path/to/new.pdf"`
+- Then: `make publish MSG="update cv"`
+
+### Preview locally
+```bash
+make serve      # With drafts visible
+make serve-prod # Production mode (no drafts)
+```
+
+### Publish changes
+```bash
+make publish MSG="description of changes"
+make quick  # Auto-generated commit message
+```
+
+### Update home page stats / availability badge
+Edit `layouts/partials/home_info.html` — the `.hs-n` spans and `.hero-availability` text.
+
+## Design System
+
+The visual design is defined in `assets/css/extended/custom.css`. Key decisions:
+
+- **Dark theme** (#0a0e14 background) with teal accent (#00e5b0)
+- **Manrope** for all headings and body text — geometric, confident
+- **JetBrains Mono** for all code and technical elements
+- **Custom CSS classes** available in markdown via raw HTML:
+  - `.btn-primary`, `.btn-outline` — CTA buttons
+  - `.badge-critical/high/medium/low/info` — severity badges
+  - `.badge-stable/test` — status badges
+  - `.cv-timeline`, `.cv-entry` — career timeline
+  - `.skills-grid`, `.skill-card` — skills display
+  - `.cert-grid`, `.cert-card` — certification badges
+  - `.stats-row`, `.stat` — counter stats
+
+## Content Guidelines
+
+### Blog posts
+- Always include: title, date, tags, categories, summary, author
+- Use `categories` for broad grouping: "Detection Engineering", "Incident Response", "Research", "CTF"
+- Use `tags` for specific tech: "sigma", "qradar", "elastic", "sysmon", "kql"
+- Use `mitre_techniques` taxonomy for ATT&CK IDs: ["T1136.001"]
+
+### Detection rules
+- Follow the archetype template exactly
+- Include: Sigma YAML, converted queries (SPL, KQL, AQL), testing notes, false positives, evasion considerations
+- Always link to MITRE ATT&CK technique page
+- Tag by tactic and data source
+
+## Rules for Claude Code
+
+1. **Never delete existing content** without explicit confirmation
+2. **Always use `/tmp/hugo`** for builds — the system `hugo` is too old (needs ≥0.146.0)
+3. **Always preview changes** with `make serve` before committing
+4. **Use the Makefile** for content creation — it ensures correct file paths and front matter
+5. **Commit messages** should be descriptive: "new post: LSASS detection walkthrough" not "update"
+6. **Custom CSS** goes in `assets/css/extended/custom.css` — never modify theme files
+7. **Images** go in `static/images/` and reference as `/images/filename.png`
+8. **When editing the config**, always run `/tmp/hugo --minify` to verify the build passes
+9. **PaperMod theme** is cloned in CI, not committed to the repo — don't add themes/ to git
 
 ## Outstanding TODOs
 
