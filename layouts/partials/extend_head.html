@@ -1,8 +1,87 @@
-<!-- Fonts: Manrope (display+body), JetBrains Mono (code), Source Serif 4 (accent prose) -->
+{{/* Fonts: Manrope (display+body), JetBrains Mono (code), Source Serif 4 (accent prose) */}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
-<!-- SEO & Social -->
+{{/* Favicon */}}
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate icon" href="/favicon.svg">
+
+{{/* SEO & Social */}}
 <meta name="author" content="Hugo Miranda">
 <meta name="theme-color" content="#0a0e14">
+
+{{/* Default OG image fallback */}}
+{{- if not .Params.images }}
+<meta property="og:image" content="{{ .Site.BaseURL }}images/og-default.png">
+<meta name="twitter:image" content="{{ .Site.BaseURL }}images/og-default.png">
+{{- end }}
+
+<style>
+  /* Hero section overrides */
+  .hero-section {
+    border: none;
+    padding: 3rem 0 2rem;
+  }
+
+  .hero-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-section h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+    color: var(--primary);
+  }
+
+  .hero-bio p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--secondary);
+    max-width: 560px;
+    margin: 0;
+  }
+
+  .hero-footer {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .cta-link {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1px;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .cta-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Code blocks */
+  .highlight pre {
+    border-radius: 4px;
+  }
+</style>

@@ -6,7 +6,7 @@ This is Hugo Miranda's personal website and security portfolio, built with Hugo 
 
 ## Tech Stack
 
-- **Static site generator:** Hugo (Go-based)
+- **Static site generator:** Hugo (v0.147.0 extended — binary at `/tmp/hugo`, NOT system `hugo`)
 - **Theme:** PaperMod (installed via git clone in CI, NOT submodule)
 - **Hosting:** GitHub Pages via GitHub Actions
 - **CSS:** Custom design system in `assets/css/extended/custom.css`
@@ -23,9 +23,6 @@ This is Hugo Miranda's personal website and security portfolio, built with Hugo 
 │   ├── _index.md           # Home page
 │   ├── about.md            # Professional profile
 │   ├── cv.md               # CV with timeline, skills, certs
-│   ├── search.md           # Search page (PaperMod Fuse.js)
-│   ├── 404.md              # Custom 404
-│   ├── archives.md         # Archive by date
 │   ├── blog/               # Blog posts (writeups, research, CTFs)
 │   │   ├── _index.md       # Blog section landing
 │   │   └── *.md            # Individual posts
@@ -36,10 +33,14 @@ This is Hugo Miranda's personal website and security portfolio, built with Hugo 
 │   ├── blog.md             # Template for new blog posts
 │   └── detection-lab.md    # Template for new Sigma rules
 ├── assets/css/extended/
-│   └── custom.css          # Full design system (colors, components, layout)
+│   ├── custom.css          # Full design system (colors, components, layout)
+│   └── syntax.css          # Monokai syntax highlighting
 ├── layouts/partials/
-│   └── extend_head.html    # Font imports and meta tags
+│   ├── home_info.html      # Hero section (availability badge, stats, CTAs)
+│   ├── extend_head.html    # Font imports, favicon, OG tags, hero CSS
+│   └── footer.html         # Site footer
 ├── static/
+│   ├── favicon.svg         # HM monogram favicon
 │   └── files/              # Downloadable files (CV PDF, etc.)
 └── .github/workflows/
     └── hugo.yml            # CI/CD pipeline
@@ -80,6 +81,9 @@ make publish MSG="description of changes"
 make quick  # Auto-generated commit message
 ```
 
+### Update home page stats / availability badge
+Edit `layouts/partials/home_info.html` — the `.hs-n` spans and `.hero-availability` text.
+
 ## Design System
 
 The visual design is defined in `assets/css/extended/custom.css`. Key decisions:
@@ -113,10 +117,17 @@ The visual design is defined in `assets/css/extended/custom.css`. Key decisions:
 ## Rules for Claude Code
 
 1. **Never delete existing content** without explicit confirmation
-2. **Always preview changes** with `hugo server` before committing
-3. **Use the Makefile** for content creation — it ensures correct file paths and front matter
-4. **Commit messages** should be descriptive: "new post: LSASS detection walkthrough" not "update"
-5. **Custom CSS** goes in `assets/css/extended/custom.css` — never modify theme files
-6. **Images** go in `static/images/` and reference as `/images/filename.png`
-7. **When editing the config**, always run `hugo --minify` to verify the build passes
-8. **PaperMod theme** is cloned in CI, not committed to the repo — don't add themes/ to git
+2. **Always use `/tmp/hugo`** for builds — the system `hugo` is too old (needs ≥0.146.0)
+3. **Always preview changes** with `make serve` before committing
+4. **Use the Makefile** for content creation — it ensures correct file paths and front matter
+5. **Commit messages** should be descriptive: "new post: LSASS detection walkthrough" not "update"
+6. **Custom CSS** goes in `assets/css/extended/custom.css` — never modify theme files
+7. **Images** go in `static/images/` and reference as `/images/filename.png`
+8. **When editing the config**, always run `/tmp/hugo --minify` to verify the build passes
+9. **PaperMod theme** is cloned in CI, not committed to the repo — don't add themes/ to git
+
+## Outstanding TODOs
+
+- [ ] Upload `Hugo_Miranda_CV.pdf` to `static/files/`
+- [ ] Create `static/images/og-default.png` (1200×630 px) for social sharing previews
+- [ ] Set `draft: false` on blog posts when ready to publish

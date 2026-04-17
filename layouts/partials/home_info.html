@@ -1,14 +1,36 @@
 {{- with site.Params.homeInfoParams }}
 <article class="first-entry home-info hero-section">
     <header class="entry-header">
+        <div class="hero-availability">
+          <span class="avail-dot"></span>
+          Open to SIEM &amp; Detection Engineering roles
+        </div>
         <span class="hero-label">SIEM Engineer &amp; Detection Engineer</span>
-        <h1>{{ .Title | markdownify }}</h1>
+        <h1>{{ .Title | markdownify }}<span class="cursor-blink">_</span></h1>
     </header>
     <div class="entry-content md-content hero-bio">
         <p>
             I design detection pipelines, implement SIEM architectures, and help organisations
             meet NIS2 and DORA compliance requirements — without the noise.
         </p>
+    </div>
+    <div class="hero-stats">
+        <div class="hs">
+          <span class="hs-n">4+</span>
+          <span class="hs-l">Years in Security</span>
+        </div>
+        <div class="hs">
+          <span class="hs-n">23k+</span>
+          <span class="hs-l">Log Sources</span>
+        </div>
+        <div class="hs">
+          <span class="hs-n">3</span>
+          <span class="hs-l">SIEM Platforms</span>
+        </div>
+        <div class="hs">
+          <span class="hs-n">100%</span>
+          <span class="hs-l">ATT&amp;CK Mapped</span>
+        </div>
     </div>
     <footer class="entry-footer hero-footer">
         {{ partial "social_icons.html" (dict "align" "left") }}

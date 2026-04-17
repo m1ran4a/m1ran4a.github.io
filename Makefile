@@ -3,7 +3,7 @@
 # Usage: make <target>
 # ═══════════════════════════════════════════════
 
-HUGO := hugo
+HUGO := /tmp/hugo
 BRANCH := main
 
 # ── Preview ──────────────────────────────────────
