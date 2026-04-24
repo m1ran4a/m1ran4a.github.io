@@ -45,7 +45,7 @@ params:
     favicon: "/favicon.ico"
 
   label:
-    text: "Hugo Miranda"
+    text: "hugo_miranda.sh"
     icon: /favicon.ico
     iconHeight: 35
 
